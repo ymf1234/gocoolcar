@@ -1,0 +1,5 @@
+wx/miniprogram/**/*.js
+
+.vscode
+
+node_modules/**/
