@@ -4,4 +4,4 @@ wx/miniprogram/**/*.js
 
 node_modules/**/
 
-wx/miniprogram/node_modules
+wx/miniprogram/node_modules/**/
