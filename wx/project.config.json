@@ -5,7 +5,7 @@
   },
   "miniprogramRoot": "miniprogram/",
   "compileType": "miniprogram",
-  "libVersion": "2.15.0",
+  "libVersion": "2.21.0",
   "projectname": "coolcar",
   "setting": {
     "urlCheck": true,
