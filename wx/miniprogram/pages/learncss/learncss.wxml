@@ -1,0 +1,11 @@
+<!--pages/learncss/learncss.wxml-->
+<view class="">
+  <text wx:if="{{showPath}}">pages/learncss/learncss.wxml</text>
+<block wx:else>
+    <text>learn css</text>
+</block>
+  <view class="cu-avatar xl radius">
+  
+    <view class="cu-tag badge">99+</view>
+  </view>
+</view>
