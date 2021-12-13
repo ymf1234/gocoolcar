@@ -1,0 +1,5 @@
+<view class="container">
+  <image class="lic-tmpl" src="/resources/lic.png"></image>
+  <view class="lg text-gray cuIcon-camerafill"></view>
+  <view class="instruction">请上传驾驶证</view>
+</view>
