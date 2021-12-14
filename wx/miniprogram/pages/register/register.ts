@@ -5,7 +5,13 @@ Page({
    * 页面的初始数据
    */
   data: {
-
+    licImgURL: '',
+    genders: ['未知', '男', '女', '其他'],
+    gendersIndex: 0,
+    birthDate: '1990-01-01',
+    licNo: '',
+    name: '',
+    state: 'UNSUBMITTED' as 'UNSUBMITTED' | 'PENDING' | 'VERIFIED'
   },
 
   /**
@@ -62,5 +68,67 @@ Page({
    */
   onShareAppMessage() {
 
+  },
+
+  onUploadLic() {
+    wx.chooseImage({
+      success: res => {
+        if(res.tempFilePaths.length > 0 ) {
+          this.setData({
+            licImgURL: res.tempFilePaths[0]
+          })
+          // TODO: upload image
+          setTimeout(() => {
+            this.setData({
+              licNo: '12312312312',
+              name : 'aaa',
+              gendersIndex: 1,
+              birthDate: '2000-12-12'
+            })
+          }, 1000)
+        }
+      }
+    })
+  },
+
+  // 性别事件
+  onGenderChange(e: any) {
+    this.setData({
+      gendersIndex: e.detail.value,
+    })
+  },
+
+  // 时间
+  onBirthDateChange(e: any) {
+    this.setData({
+      birthDate: e.detail.value,
+    })
+  },
+
+  // 表单提交
+  onSubmit() {
+    this.setData({
+      state: 'PENDING'
+    })
+    setTimeout(() => {
+      this.onLicVerified()
+    }, 3000);
+  },
+
+  // 重新审核
+  onResubmit() {
+    this.setData({
+      state: 'UNSUBMITTED',
+      licImgURL: ''
+    })
+  },
+
+  onLicVerified() {
+    this.setData({
+      state: 'VERIFIED',
+    })
+    wx.redirectTo({
+      url: '/pages/lock/lock'
+    })
   }
 })

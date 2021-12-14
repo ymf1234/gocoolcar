@@ -1,20 +1,21 @@
 {
-  "pages": [
-    "pages/index/index",
-    "pages/learncss/learncss",
-    "pages/register/register"
-  ],
-  "permission": {
-    "scope.userLocation": {
-      "desc": "你的位置将用于驾驶位置显示"
-    }
-  },
-  "window": {
-    "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "租车教学",
-    "navigationBarTextStyle": "black"
-  },
-  "style": "v2",
-  "sitemapLocation": "sitemap.json"
+    "pages": [
+        "pages/index/index",
+        "pages/learncss/learncss",
+        "pages/register/register",
+        "pages/lock/lock"
+    ],
+    "permission": {
+        "scope.userLocation": {
+            "desc": "你的位置将用于驾驶位置显示"
+        }
+    },
+    "window": {
+        "backgroundTextStyle": "light",
+        "navigationBarBackgroundColor": "#fff",
+        "navigationBarTitleText": "租车教学",
+        "navigationBarTextStyle": "black"
+    },
+    "style": "v2",
+    "sitemapLocation": "sitemap.json"
 }
