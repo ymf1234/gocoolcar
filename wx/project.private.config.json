@@ -23,6 +23,12 @@
                     "pathName": "pages/lock/lock",
                     "query": "",
                     "scene": null
+                },
+                {
+                    "name": "",
+                    "pathName": "pages/driving/driving",
+                    "query": "",
+                    "scene": null
                 }
             ]
         }

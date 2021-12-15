@@ -1,18 +1,25 @@
-// pages/lock/lock.ts
+import { IAppOption } from "../../appoption"
+const shareLocationKey = "share_location";
 Page({
 
     /**
      * 页面的初始数据
      */
     data: {
-
+        avatarURL: '',
+        shareLocation: false,
     },
 
     /**
      * 生命周期函数--监听页面加载
      */
-    onLoad() {
-
+    async onLoad() {
+        const userInfo = await getApp<IAppOption>().globalData.userInfo;
+        const shareLocation = wx.getStorageSync(shareLocationKey) || false;
+        this.setData({
+            avatarURL: userInfo?.avatarUrl,
+            shareLocation: shareLocation,
+        })
     },
 
     /**
@@ -62,5 +69,37 @@ Page({
      */
     onShareAppMessage() {
 
-    }
+    },
+
+    // 获取用户信息
+    onGetUserInfo(e: any) {
+        const userInfo : WechatMiniprogram.UserInfo = e.detail.userInfo;
+        if(userInfo) {
+            getApp<IAppOption>().resolveUserInfo(userInfo)
+            wx.setStorageSync(shareLocationKey, true)
+        }
+    },
+
+    // 是否展示头像
+    onShareLocation(e: any) {
+        const shareLocation:boolean = e.detail.value
+
+        wx.setStorageSync(shareLocationKey, shareLocation)
+    },
+
+    // 
+    onUnlockTap() {
+        wx.showLoading({
+            title: '开锁中',
+            mask: true,
+        })
+        setTimeout(()=> {
+            wx.redirectTo({
+                url: '/pages/driving/driving',
+                complete: () => {
+                    wx.hideLoading()
+                }
+            })
+        }, 2000)
+    },
 })

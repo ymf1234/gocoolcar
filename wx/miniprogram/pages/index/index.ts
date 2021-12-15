@@ -1,4 +1,7 @@
+import { IAppOption } from "../../appoption"
+
 Page({
+  avatarURL: '',
   isPageShowing: false,
   data: {
     setting: {
@@ -45,9 +48,22 @@ Page({
     
   },
 
-  onLoad: function () { 
+  //  onLoad: function () { 
+  //   // 页面渲染后 执行
+  //   this.onHide()
+  // },
+
+  async onLoad() {
     // 页面渲染后 执行
     this.onHide()
+
+    const userInfo = await getApp<IAppOption>().globalData.userInfo;
+    if(userInfo) {
+      this.setData({
+        avatarURL: userInfo?.avatarUrl,
+      })
+    }
+
   },
 
   // 扫码
