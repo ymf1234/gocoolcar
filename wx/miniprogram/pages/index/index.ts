@@ -143,6 +143,12 @@ Page({
     }
 
     moveCar()
-  }
+  },
+
+  onMyTripsTap() { 
+    wx.navigateTo({
+      url: '/pages/mytrips/mytrips'
+    })
+  },
       
 })

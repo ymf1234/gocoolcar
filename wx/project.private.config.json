@@ -29,6 +29,12 @@
                     "pathName": "pages/driving/driving",
                     "query": "",
                     "scene": null
+                },
+                {
+                    "name": "",
+                    "pathName": "pages/mytrips/mytrips",
+                    "query": "",
+                    "scene": null
                 }
             ]
         }
