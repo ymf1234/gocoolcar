@@ -1,4 +1,5 @@
 import { IAppOption } from "../../appoption"
+import { routing } from "../../utils/routing";
 
 Page({
   avatarURL: '',
@@ -67,11 +68,23 @@ Page({
   },
 
   // 扫码
-  onScanClicked() {
+  onScanTap() {
     wx.scanCode({
       success: () => {
-        wx.navigateTo({
-          url: '/pages/register/register'
+        wx.showModal({
+          title: '身份认证',
+          content: '需要身份证认证才能租车',
+          success: () => {
+            const carID='car123'
+            // const redirectURL=`/pages/lock/lock?car_id=${carID}`
+            const redirectURL = routing.lock({
+              car_id: carID
+            })
+            wx.navigateTo({
+              // url: `/pages/register/register?redirect=${encodeURIComponent(redirectURL)}`
+              url: routing.register({redirectURL:redirectURL})
+            })
+          }
         })
       },
       fail: res => {
@@ -147,7 +160,7 @@ Page({
 
   onMyTripsTap() { 
     wx.navigateTo({
-      url: '/pages/mytrips/mytrips'
+      url: routing.mytrips()
     })
   },
       

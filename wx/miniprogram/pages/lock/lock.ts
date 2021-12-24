@@ -1,4 +1,5 @@
 import { IAppOption } from "../../appoption"
+import { routing } from "../../utils/routing";
 const shareLocationKey = "share_location";
 Page({
 
@@ -13,7 +14,9 @@ Page({
     /**
      * 生命周期函数--监听页面加载
      */
-    async onLoad() {
+    async onLoad(opt: Record<'car_id', string>) {
+        const o: routing.LockOpts = opt
+        console.log('unlocking car', o.car_id)
         const userInfo = await getApp<IAppOption>().globalData.userInfo;
         const shareLocation = wx.getStorageSync(shareLocationKey) || false;
         this.setData({
@@ -100,6 +103,8 @@ Page({
                     avatarURL: this.data.shareLocation ? this.data.avatarURL : '',
                 })
 
+                const tripID = 'trip456'
+
                 wx.showLoading({
                     title: '开锁中',
                     mask: true,
@@ -107,7 +112,8 @@ Page({
 
                 setTimeout(()=> {
                     wx.redirectTo({
-                        url: '/pages/driving/driving',
+                        // url: `/pages/driving/driving?trip_id=${tripID}`,
+                        url: routing.drving({trip_id: tripID}),
                         complete: () => {
                             wx.hideLoading()
                         }

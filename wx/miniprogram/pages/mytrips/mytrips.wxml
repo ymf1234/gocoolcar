@@ -1,5 +1,17 @@
 <view id="heading" class="padding-bottom-xs">
-    <swiper indicator-dots circular>
+    <swiper
+        indicator-dots="{{indicatorDots}}"
+        autoplay="{{autoPlay}}"
+        interval="{{interval}}"
+        duration="{{duration}}"
+        circular="{{circular}}"
+        display-multiple-items="{{multiItemCount}}"
+        previous-margin="{{preVMargin}}"
+        next-margin="{{nextMargin}}"
+        vertical="{{vertical}}"
+        current="{{current}}"
+        bindchange="onSwiperChange"
+    >
         <swiper-item wx:for="{{promotionItems}}" wx:key="promotionID" 
             bindtap="onPromotionItemTap"
             data-promotion-id="{{item.promotionID}}">
@@ -20,6 +32,7 @@
     </view>
 </view>
 <view class="nav-container">
+
     <swiper duration="500" display-multiple-items="{{navCount}}"
         vertical style="height:{{tripsHeight}}px"
         class="bg-white nav" current-item-id="{{navScroll}}">
@@ -31,18 +44,19 @@
             <view wx:if="{{navSel===item.id}}" class="cur"></view>
         </swiper-item>
     </swiper>
+
     <scroll-view scroll-y scroll-with-animation enable-back-to-top
         style="height:{{tripsHeight}}px"
         scroll-into-view="{{mainScroll}}"
         bindscroll="onMainScroll" >
         <view wx:for="{{mainItems}}" wx:key="id" class="bg-white margin-bottom margin-lr padding-bottom trip main-item"
             id="{{item.id}}" data-nav-id="{{item.navId}}" data-nav-scroll-id="{{item.navScrollId}}"
-            data-trip-id="{{item.data.id}}" data-trip-in-progress="{{item.data.inProgress}}" bindtap="onMianItemTap">
+            data-trip-id="{{item.data.id}}" data-trip-in-progress="{{item.inProgress}}" bindtap="onMianItemTap">
             <view class='cu-bar solid-bottom padding-right'>
                 <view class='action'>
                 <text class='cuIcon-title text-green'></text> {{item.data.shortId}} </view>
-                <view class="{{item.data.inProgress?'text-blue in-progress text-lg text-bold':''}}">{{item.data.status}}
-                  <text wx:if="{{item.data.inProgress}}" class="cuIcon-right"/>
+                <view class="{{item.inProgress?'text-blue in-progress text-lg text-bold':''}}">{{item.data.status}}
+                  <text wx:if="{{item.inProgress}}" class="cuIcon-right"/>
                 </view>
             </view>
             <view class="trip-detail padding-right">
