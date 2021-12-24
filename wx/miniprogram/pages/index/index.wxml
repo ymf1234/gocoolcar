@@ -17,4 +17,5 @@
       <view>扫码租车</view>
   </view>
 </map>
-<modal></modal>
+<modal showCancel="{{showCancel}}" showModal="{{showModal}}" title="身份证" contents="需要身份证认证才能租车" bindok="">
+</modal>

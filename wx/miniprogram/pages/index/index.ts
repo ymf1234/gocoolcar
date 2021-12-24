@@ -5,6 +5,8 @@ Page({
   avatarURL: '',
   isPageShowing: false,
   data: {
+    showCancel: false,
+    showModal: false,
     setting: {
       skew: 0,
       rotate: 0,
