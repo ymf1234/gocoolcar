@@ -72,12 +72,9 @@ Page({
   // 扫码
   onScanTap() {
     wx.scanCode({
-      success: () => {
-        wx.showModal({
-          title: '身份认证',
-          content: '需要身份证认证才能租车',
-          success: () => {
-            const carID='car123'
+      success: async () => {
+        await this.selectComponent('#licModal').showModal()
+        const carID='car123'
             // const redirectURL=`/pages/lock/lock?car_id=${carID}`
             const redirectURL = routing.lock({
               car_id: carID
@@ -86,8 +83,6 @@ Page({
               // url: `/pages/register/register?redirect=${encodeURIComponent(redirectURL)}`
               url: routing.register({redirectURL:redirectURL})
             })
-          }
-        })
       },
       fail: res => {
         console.log('res', res)
@@ -163,6 +158,19 @@ Page({
   onMyTripsTap() { 
     wx.navigateTo({
       url: routing.mytrips()
+    })
+  },
+
+  onModalOK() {
+    console.log('ok clicked')
+    const carID='car123'
+    // const redirectURL=`/pages/lock/lock?car_id=${carID}`
+    const redirectURL = routing.lock({
+      car_id: carID
+    })
+    wx.navigateTo({
+      // url: `/pages/register/register?redirect=${encodeURIComponent(redirectURL)}`
+      url: routing.register({redirectURL:redirectURL})
     })
   },
       
