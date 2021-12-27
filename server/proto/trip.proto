@@ -1,0 +1,10 @@
+syntax = "proto3";
+package coolcar;
+option go_package="coolcar/proto/gen/go;trippb";
+
+message Trip {
+    string start = 1;
+    string end = 2;
+    int64 duration_sec = 3;
+    int64 fee_cent = 4;
+}
