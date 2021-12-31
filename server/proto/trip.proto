@@ -22,11 +22,11 @@ message Trip {
     repeated Location path_locations = 7;
     string end = 2;
     Location end_pos = 6;
-    int64 duration_sec = 3;
-    int64 fee_cent = 4;
+    int32 duration_sec = 3;
+    int32 fee_cent = 4;
     TripStatus status = 8;
-    bool isPromotionTrip = 9;
-    bool isFromGuestUser = 10;
+    bool is_promotionTrip = 9;
+    bool is_fromGuestUser = 10;
 }
 
 
