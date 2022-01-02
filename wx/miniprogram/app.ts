@@ -1,6 +1,6 @@
+import camelcaseKeys from "camelcase-keys"
 import { IAppOption } from "./appoption"
 import { coolcar } from "./service/proto_gen/trip_pb"
-import { getSetting, getUserInfo } from "./utils/wxapi"
 
 let resolveUserInfo: (value: WechatMiniprogram.UserInfo | PromiseLike<WechatMiniprogram.UserInfo>) => void
 let rejectUserInfo: (reason?: any) => void
@@ -19,7 +19,10 @@ App<IAppOption>({
       url: "http://localhost:8080/trip/trip123",
       method: 'GET',
       success: res => {
-        const getTripResp = coolcar.GetTripResponse.fromObject(res.data as object)
+        const getTripResp = coolcar.GetTripResponse.fromObject(
+          camelcaseKeys(res.data as object, {
+            deep: true
+          }))
         console.log(getTripResp)
       },
       fail: console.error

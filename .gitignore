@@ -1,7 +1,15 @@
 wx/miniprogram/**/*.js
+!wx/miniprogram/service/proto_gen/*.js
 
 .vscode
 
-node_modules/**/
 
-wx/node_modules/
+wx/miniprogram/node_modules/
+
+__debug_bin
+
+wx/miniprogram/miniprogram_npm/
+
+
+
+
