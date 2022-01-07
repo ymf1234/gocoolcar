@@ -32,7 +32,7 @@ func (s *Service) Login(c context.Context, req *authpb.LoginRequest) (*authpb.Lo
 	openID, err := s.OpenIDResolver.Resolve(req.Code)
 
 	if err != nil {
-		return nil, status.Errorf(codes.Unavailable, "cannot resolve openid: &v", err)
+		return nil, status.Errorf(codes.Unavailable, "cannot resolve openid: %v", err)
 	}
 	s.Logger.Info("received code ", zap.String("code", req.Code))
 
@@ -50,7 +50,7 @@ func (s *Service) Login(c context.Context, req *authpb.LoginRequest) (*authpb.Lo
 	}
 
 	return &authpb.LoginResponse{
-		AccessToken: "token for" + tkn,
+		AccessToken: tkn,
 		ExpiresIn:   int32(s.TokenExpire.Seconds()),
 	}, nil
 }
