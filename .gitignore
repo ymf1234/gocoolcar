@@ -10,6 +10,7 @@ __debug_bin
 
 wx/miniprogram/miniprogram_npm/
 
-
+priv.key
+pub.key
 
 
