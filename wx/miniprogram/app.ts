@@ -44,6 +44,16 @@ App<IAppOption>({
               
           
             console.log(loginResp)
+            wx.request({
+              url: 'http://localhost:8080/v1/trip',
+              method: 'POST',
+              data: {
+                start: 'abc',
+              },
+              header: {
+                authorization: 'Bearer ' + loginResp.accessToken
+              }
+            })
           },
           fail: console.error,
         })
