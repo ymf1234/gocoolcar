@@ -2,18 +2,24 @@ package auth
 
 import (
 	"context"
-	"crypto/rsa"
+	"coolcar/shared/auth/token"
 	"fmt"
 	"io/ioutil"
 	"os"
 
 	"github.com/dgrijalva/jwt-go"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
+
+type tokenVerifier interface {
+	Verifier(token string) (string, error)
+}
 
 // interceptor i
 type interceptor struct {
-	publicKey *rsa.PublicKey
+	verifier tokenVerifier
 }
 
 func Interceptor(publicKeyFile string) (grpc.UnaryServerInterceptor, error) {
@@ -34,7 +40,9 @@ func Interceptor(publicKeyFile string) (grpc.UnaryServerInterceptor, error) {
 	}
 
 	i := &interceptor{
-		publicKey: pubKey,
+		verifier: &token.JWTTokenVerifier{
+			PublicKey: pubKey,
+		},
 	}
 
 	return i.HandleReq, nil
@@ -42,5 +50,13 @@ func Interceptor(publicKeyFile string) (grpc.UnaryServerInterceptor, error) {
 
 // interceptor i
 func (i *interceptor) HandleReq(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
+	tkn, err := tokenFromContext(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Unauthenticated, "")
+	}
+	aid, err := i.verifier.Verifier(tkn)
+	if err != nil {
+		return nil, status.Error(codes.Unauthenticated, "token not valid: %v", err)
+	}
 	return handler(ctx, req)
 }
