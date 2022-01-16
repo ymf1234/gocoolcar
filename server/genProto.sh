@@ -25,7 +25,7 @@ function genProto {
     $PBTS_BIN_DIR/pbts -o $PBTS_OUT_DIR/${DOMAIN}_pb.d.ts $PBTS_OUT_DIR/${DOMAIN}_pb.js
 }
 
-# genProto auth
+#genProto auth
 genProto rental
-# genProto blob 1
-# genProto car
+#genProto blob 1
+#genProto car
