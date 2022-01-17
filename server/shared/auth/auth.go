@@ -6,11 +6,18 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strings"
 
 	"github.com/dgrijalva/jwt-go"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
+)
+
+const (
+	authorizationHeader = "authorization"
+	bearerPrefix        = "Bearer "
 )
 
 type tokenVerifier interface {
@@ -56,7 +63,45 @@ func (i *interceptor) HandleReq(ctx context.Context, req interface{}, info *grpc
 	}
 	aid, err := i.verifier.Verifier(tkn)
 	if err != nil {
-		return nil, status.Error(codes.Unauthenticated, "token not valid: %v", err)
+		return nil, status.Errorf(codes.Unauthenticated, "token not valid: %v", err)
 	}
-	return handler(ctx, req)
+	return handler(ContextWithAccountID(ctx, aid), req)
+}
+
+func tokenFromContext(c context.Context) (string, error) {
+	unauthenticated := status.Error(codes.Unauthenticated, "")
+	m, ok := metadata.FromIncomingContext(c)
+	if !ok {
+		return "", unauthenticated
+	}
+
+	tkn := ""
+	for _, v := range m[authorizationHeader] {
+		if strings.HasPrefix(v, bearerPrefix) {
+			tkn = v[len(bearerPrefix):]
+		}
+	}
+
+	if tkn == "" {
+		return "", unauthenticated
+	}
+
+	return tkn, nil
+}
+
+type accountIDKey struct {
+}
+
+func ContextWithAccountID(c context.Context, aid string) context.Context {
+	return context.WithValue(c, accountIDKey{}, aid)
+}
+
+func AccountIDFromContext(c context.Context) (string, error) {
+	v := c.Value(accountIDKey{})
+	aid, ok := v.(string)
+	if !ok {
+		return "", status.Error(codes.Unauthenticated, "")
+	}
+
+	return aid, nil
 }
