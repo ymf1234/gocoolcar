@@ -18,7 +18,7 @@ type GRPCConfig struct {
 
 func RunGRPCServer(c *GRPCConfig) error {
 	nameFile := zap.String("name", c.Name)
-	lis, err := net.Listen("tcp", ":8082")
+	lis, err := net.Listen("tcp", c.Addr)
 
 	if err != nil {
 		c.Logger.Fatal("cannot listen", zap.Error(err))
@@ -42,5 +42,6 @@ func RunGRPCServer(c *GRPCConfig) error {
 	// 	UnimplementedTripServiceServer: rentalpb.UnimplementedTripServiceServer{},
 	// })
 
+	c.Logger.Info("server started ", nameFile, zap.String("addr ", c.Addr))
 	return s.Serve(lis)
 }

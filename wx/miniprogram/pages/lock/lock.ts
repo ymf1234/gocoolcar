@@ -1,4 +1,5 @@
 import { IAppOption } from "../../appoption"
+import { TripService } from "../../service/trip";
 import { routing } from "../../utils/routing";
 const shareLocationKey = "share_location";
 Page({
@@ -103,6 +104,9 @@ Page({
                     avatarURL: this.data.shareLocation ? this.data.avatarURL : '',
                 })
 
+                TripService.CreateTrip({
+                    start: 'abc',
+                })
                 const tripID = 'trip456'
 
                 wx.showLoading({
