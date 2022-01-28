@@ -4,7 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	mgo "coolcar/shared/mongo"
+	"coolcar/shared/id"
+	mgutil "coolcar/shared/mongo"
+	"coolcar/shared/mongo/objid"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -23,12 +25,14 @@ func NewMongo(db *mongo.Database) *Mongo {
 	}
 }
 
-func (m *Mongo) ResolveAccountID(c context.Context, OpenID string) (string, error) {
+func (m *Mongo) ResolveAccountID(c context.Context, OpenID string) (id.AccountID, error) {
+	insertedID := mgutil.NewObjID()
 	res := m.col.FindOneAndUpdate(c, bson.M{
 		openIDField: OpenID,
 	},
-		mgo.Set(bson.M{
-			openIDField: OpenID,
+		mgutil.SetOnInsert(bson.M{
+			mgutil.IDFieldName: insertedID,
+			openIDField:        OpenID,
 		}),
 		options.FindOneAndUpdate().SetUpsert(true).SetReturnDocument(options.After))
 
@@ -36,12 +40,12 @@ func (m *Mongo) ResolveAccountID(c context.Context, OpenID string) (string, erro
 		return "", fmt.Errorf("connot FindOneAndUpdate: %v", err)
 	}
 
-	var row mgo.ObjID
+	var row mgutil.IDField
 	err := res.Decode(&row)
 
 	if err != nil {
 		return "", fmt.Errorf("connot decode result: %v", err)
 	}
 
-	return row.ID.Hex(), nil
+	return objid.ToAccountID(row.ID), nil
 }

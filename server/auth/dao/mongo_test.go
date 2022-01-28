@@ -24,7 +24,7 @@ func TestResolveAccountID(t *testing.T) {
 		t.Errorf("faild resolve account id for 123: %v", err)
 	} else {
 		want := "61d67ef9327cb8b9d64cdfb6"
-		if id != want {
+		if id.String() != want {
 			t.Errorf("resolve account id:want: %q, got: %q", want, id)
 		}
 	}

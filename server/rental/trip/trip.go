@@ -4,7 +4,6 @@ import (
 	"context"
 
 	rentalpb "coolcar/rental/api/gen/v1"
-	"coolcar/shared/auth"
 
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
@@ -16,12 +15,18 @@ type Service struct {
 	rentalpb.UnimplementedTripServiceServer
 }
 
-func (s *Service) CreateTrip(ctx context.Context, req *rentalpb.CreateTripRequest) (*rentalpb.CreateTripResponse, error) {
-	aid, err := auth.AccountIDFromContext(ctx)
+func (s *Service) CreateTrip(ctx context.Context, req *rentalpb.CreateTripRequest) (*rentalpb.TripEntity, error) {
+	return nil, status.Error(codes.Unimplemented, "")
+}
 
-	if err != nil {
-		return nil, err
-	}
-	s.Logger.Info("create trip", zap.String("start", req.Start), zap.String("account_id", aid.String()))
+func (s *Service) GetTirp(ctx context.Context, req *rentalpb.GetTirpRequest) (*rentalpb.Trip, error) {
+	return nil, status.Error(codes.Unimplemented, "")
+}
+
+func (s *Service) GetTirps(ctx context.Context, req *rentalpb.GetTirpsRequest) (*rentalpb.GetTirpsReponse, error) {
+	return nil, status.Error(codes.Unimplemented, "")
+}
+
+func (s *Service) UpdateTrip(ctx context.Context, req *rentalpb.UpdateTripRequest) (*rentalpb.Trip, error) {
 	return nil, status.Error(codes.Unimplemented, "")
 }
