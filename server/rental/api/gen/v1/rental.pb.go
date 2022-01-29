@@ -257,6 +257,7 @@ type Trip struct {
 
 	AccountId string          `protobuf:"bytes,1,opt,name=account_id,json=accountId,proto3" json:"account_id,omitempty"`
 	CarId     string          `protobuf:"bytes,2,opt,name=car_id,json=carId,proto3" json:"car_id,omitempty"`
+	IdentityId string 		  `protobuf:"bytes,7,opt,name=identity_id,json=IdentityID,proto3" json:"identity_id,omitempty"`
 	Start     *LocationStatus `protobuf:"bytes,3,opt,name=start,proto3" json:"start,omitempty"`
 	Current   *LocationStatus `protobuf:"bytes,4,opt,name=current,proto3" json:"current,omitempty"`
 	End       *LocationStatus `protobuf:"bytes,5,opt,name=end,proto3" json:"end,omitempty"`

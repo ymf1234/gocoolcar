@@ -15,7 +15,7 @@ message LocationStatus {
     string poi_name = 4;
 }
 
-message TripStatus {
+enum TripStatus {
     TS_NOT_SPECIFIED = 0;
     IN_PROGRESS = 1;
     FINISHED = 2;
@@ -33,6 +33,7 @@ message Trip {
     LocationStatus current = 4;
     LocationStatus end = 5;
     TripStatus status = 6;
+    string identity_id = 7;
 }
 
 message CreateTripRequest {

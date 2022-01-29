@@ -15,6 +15,7 @@ import (
 const (
 	tripField      = "trip"
 	accountIDField = tripField + ".accountid"
+	statusField    = tripField + ".status"
 )
 
 type Mongo struct {
@@ -49,6 +50,7 @@ func (m *Mongo) CreateTrip(c context.Context, trip *rentalpb.Trip) (*TripRecord,
 	return r, nil
 }
 
+// GetTirp
 func (m *Mongo) GetTirp(c context.Context, id id.TripID, accountID id.AccountID) (*TripRecord, error) {
 	objID, err := objid.FromID(id)
 	if err != nil {
@@ -71,4 +73,50 @@ func (m *Mongo) GetTirp(c context.Context, id id.TripID, accountID id.AccountID)
 	}
 	return &tr, nil
 
+}
+
+func (m *Mongo) GetTirps(c context.Context, accountID id.AccountID, status rentalpb.TripStatus) ([]*TripRecord, error) {
+	filter := bson.M{
+		accountIDField: accountID.String(),
+	}
+
+	if status != rentalpb.TripStatus_TS_NOT_SPECIFIED {
+		filter[statusField] = status
+	}
+
+	res, err := m.col.Find(c, filter)
+	if err != nil {
+		return nil, err
+	}
+
+	var trips []*TripRecord
+	for res.Next(c) {
+		var trip TripRecord
+		err = res.Decode(&trip)
+		if err != nil {
+			return nil, err
+		}
+		trips = append(trips, &trip)
+	}
+
+	return trips, nil
+}
+
+func (m *Mongo) UpdateTrip(c context.Context, tid id.TripID, aid id.AccountID, updatedAt int64, trip *rentalpb.Trip) error {
+	objID, err := objid.FromID(tid)
+	if err != nil {
+		return fmt.Errorf("invalid id:%v", err)
+	}
+
+	newUpdateAt := mgutil.UpdateAt()
+	_, err = m.col.UpdateOne(c, bson.M{
+		mgutil.IDFieldName:        objID,
+		accountIDField:            aid.String(),
+		mgutil.UpdatedAtFieldName: updatedAt,
+	}, mgutil.Set(bson.M{
+		tripField:                 trip,
+		mgutil.UpdatedAtFieldName: newUpdateAt,
+	}))
+
+	return err
 }
