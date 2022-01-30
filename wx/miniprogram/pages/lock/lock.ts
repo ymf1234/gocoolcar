@@ -4,6 +4,7 @@ import { routing } from "../../utils/routing";
 const shareLocationKey = "share_location";
 Page({
 
+    carID: '',
     /**
      * 页面的初始数据
      */
@@ -17,6 +18,7 @@ Page({
      */
     async onLoad(opt: Record<'car_id', string>) {
         const o: routing.LockOpts = opt
+        this.carID = o.car_id
         console.log('unlocking car', o.car_id)
         const userInfo = await getApp<IAppOption>().globalData.userInfo;
         const shareLocation = wx.getStorageSync(shareLocationKey) || false;
@@ -104,8 +106,12 @@ Page({
                     avatarURL: this.data.shareLocation ? this.data.avatarURL : '',
                 })
 
+                if(!this.carID) {
+                    return
+                }
                 TripService.CreateTrip({
-                    start: 'abc',
+                   start: loc,
+                   carId: this.carID
                 })
                 const tripID = 'trip456'
 

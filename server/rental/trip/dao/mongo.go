@@ -50,7 +50,7 @@ func (m *Mongo) CreateTrip(c context.Context, trip *rentalpb.Trip) (*TripRecord,
 	return r, nil
 }
 
-// GetTirp
+// GetTirp in
 func (m *Mongo) GetTirp(c context.Context, id id.TripID, accountID id.AccountID) (*TripRecord, error) {
 	objID, err := objid.FromID(id)
 	if err != nil {

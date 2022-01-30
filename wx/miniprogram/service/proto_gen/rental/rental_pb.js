@@ -379,6 +379,7 @@ export const rental = $root.rental = (() => {
              * @property {rental.v1.ILocationStatus|null} [current] Trip current
              * @property {rental.v1.ILocationStatus|null} [end] Trip end
              * @property {rental.v1.TripStatus|null} [status] Trip status
+             * @property {string|null} [identityId] Trip identityId
              */
 
             /**
@@ -445,6 +446,14 @@ export const rental = $root.rental = (() => {
             Trip.prototype.status = 0;
 
             /**
+             * Trip identityId.
+             * @member {string} identityId
+             * @memberof rental.v1.Trip
+             * @instance
+             */
+            Trip.prototype.identityId = "";
+
+            /**
              * Creates a Trip message from a plain object. Also converts values to their respective internal types.
              * @function fromObject
              * @memberof rental.v1.Trip
@@ -489,6 +498,8 @@ export const rental = $root.rental = (() => {
                     message.status = 2;
                     break;
                 }
+                if (object.identityId != null)
+                    message.identityId = String(object.identityId);
                 return message;
             };
 
@@ -512,6 +523,7 @@ export const rental = $root.rental = (() => {
                     object.current = null;
                     object.end = null;
                     object.status = options.enums === String ? "TS_NOT_SPECIFIED" : 0;
+                    object.identityId = "";
                 }
                 if (message.accountId != null && message.hasOwnProperty("accountId"))
                     object.accountId = message.accountId;
@@ -525,6 +537,8 @@ export const rental = $root.rental = (() => {
                     object.end = $root.rental.v1.LocationStatus.toObject(message.end, options);
                 if (message.status != null && message.hasOwnProperty("status"))
                     object.status = options.enums === String ? $root.rental.v1.TripStatus[message.status] : message.status;
+                if (message.identityId != null && message.hasOwnProperty("identityId"))
+                    object.identityId = message.identityId;
                 return object;
             };
 
