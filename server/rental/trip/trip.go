@@ -2,6 +2,7 @@ package trip
 
 import (
 	"context"
+	"time"
 
 	rentalpb "coolcar/rental/api/gen/v1"
 	"coolcar/rental/trip/dao"
@@ -39,6 +40,10 @@ func (s *Service) CreateTrip(ctx context.Context, req *rentalpb.CreateTripReques
 	aid, err := auth.AccountIDFromContext(ctx)
 	if err != nil {
 		return nil, err
+	}
+
+	if req.CarId == "" || req.Start == nil {
+		return nil, status.Error(codes.InvalidArgument, "")
 	}
 	// 验证驾驶者身份
 	iID, err := s.ProfileManager.Verify(ctx, aid)
@@ -136,11 +141,20 @@ func (s *Service) UpdateTrip(ctx context.Context, req *rentalpb.UpdateTripReques
 	tr, err := s.Mongo.GetTrip(ctx, tid, aid)
 
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.NotFound, "")
 	}
+
+	if tr.Trip.Current == nil {
+		s.Logger.Error("trip without current set ", zap.String("id", tid.String()))
+		return nil, status.Error(codes.Internal, "")
+	}
+	cur := tr.Trip.Current.Location
+
 	if req.Current != nil {
-		tr.Trip.Current = s.calcCurrentStatus(tr.Trip, req.Current)
+		cur = req.Current
 	}
+
+	tr.Trip.Current = s.calcCurrentStatus(tr.Trip.Current, cur)
 
 	if req.EndTrip {
 		tr.Trip.End = tr.Trip.Current
@@ -150,6 +164,12 @@ func (s *Service) UpdateTrip(ctx context.Context, req *rentalpb.UpdateTripReques
 	return nil, status.Error(codes.Unimplemented, "")
 }
 
-func (s *Service) calcCurrentStatus(trip *rentalpb.Trip, cur *rentalpb.Location) *rentalpb.LocationStatus {
-	return nil
+const centsPerSec = 0.7
+
+func (s *Service) calcCurrentStatus(last *rentalpb.LocationStatus, cur *rentalpb.Location) *rentalpb.LocationStatus {
+	elapsedSec := float64(time.Now().Unix() - last.TimestampSec)
+	return &rentalpb.LocationStatus{
+		Location: cur,
+		FeeCent:  last.FeeCent + int32(centsPerSec*elapsedSec),
+	}
 }
