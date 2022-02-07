@@ -657,24 +657,24 @@ export const rental = $root.rental = (() => {
             return CreateTripRequest;
         })();
 
-        v1.GetTirpRequest = (function() {
+        v1.GetTripRequest = (function() {
 
             /**
-             * Properties of a GetTirpRequest.
+             * Properties of a GetTripRequest.
              * @memberof rental.v1
-             * @interface IGetTirpRequest
-             * @property {string|null} [id] GetTirpRequest id
+             * @interface IGetTripRequest
+             * @property {string|null} [id] GetTripRequest id
              */
 
             /**
-             * Constructs a new GetTirpRequest.
+             * Constructs a new GetTripRequest.
              * @memberof rental.v1
-             * @classdesc Represents a GetTirpRequest.
-             * @implements IGetTirpRequest
+             * @classdesc Represents a GetTripRequest.
+             * @implements IGetTripRequest
              * @constructor
-             * @param {rental.v1.IGetTirpRequest=} [properties] Properties to set
+             * @param {rental.v1.IGetTripRequest=} [properties] Properties to set
              */
-            function GetTirpRequest(properties) {
+            function GetTripRequest(properties) {
                 if (properties)
                     for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                         if (properties[keys[i]] != null)
@@ -682,40 +682,40 @@ export const rental = $root.rental = (() => {
             }
 
             /**
-             * GetTirpRequest id.
+             * GetTripRequest id.
              * @member {string} id
-             * @memberof rental.v1.GetTirpRequest
+             * @memberof rental.v1.GetTripRequest
              * @instance
              */
-            GetTirpRequest.prototype.id = "";
+            GetTripRequest.prototype.id = "";
 
             /**
-             * Creates a GetTirpRequest message from a plain object. Also converts values to their respective internal types.
+             * Creates a GetTripRequest message from a plain object. Also converts values to their respective internal types.
              * @function fromObject
-             * @memberof rental.v1.GetTirpRequest
+             * @memberof rental.v1.GetTripRequest
              * @static
              * @param {Object.<string,*>} object Plain object
-             * @returns {rental.v1.GetTirpRequest} GetTirpRequest
+             * @returns {rental.v1.GetTripRequest} GetTripRequest
              */
-            GetTirpRequest.fromObject = function fromObject(object) {
-                if (object instanceof $root.rental.v1.GetTirpRequest)
+            GetTripRequest.fromObject = function fromObject(object) {
+                if (object instanceof $root.rental.v1.GetTripRequest)
                     return object;
-                let message = new $root.rental.v1.GetTirpRequest();
+                let message = new $root.rental.v1.GetTripRequest();
                 if (object.id != null)
                     message.id = String(object.id);
                 return message;
             };
 
             /**
-             * Creates a plain object from a GetTirpRequest message. Also converts values to other types if specified.
+             * Creates a plain object from a GetTripRequest message. Also converts values to other types if specified.
              * @function toObject
-             * @memberof rental.v1.GetTirpRequest
+             * @memberof rental.v1.GetTripRequest
              * @static
-             * @param {rental.v1.GetTirpRequest} message GetTirpRequest
+             * @param {rental.v1.GetTripRequest} message GetTripRequest
              * @param {$protobuf.IConversionOptions} [options] Conversion options
              * @returns {Object.<string,*>} Plain object
              */
-            GetTirpRequest.toObject = function toObject(message, options) {
+            GetTripRequest.toObject = function toObject(message, options) {
                 if (!options)
                     options = {};
                 let object = {};
@@ -727,37 +727,37 @@ export const rental = $root.rental = (() => {
             };
 
             /**
-             * Converts this GetTirpRequest to JSON.
+             * Converts this GetTripRequest to JSON.
              * @function toJSON
-             * @memberof rental.v1.GetTirpRequest
+             * @memberof rental.v1.GetTripRequest
              * @instance
              * @returns {Object.<string,*>} JSON object
              */
-            GetTirpRequest.prototype.toJSON = function toJSON() {
+            GetTripRequest.prototype.toJSON = function toJSON() {
                 return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
             };
 
-            return GetTirpRequest;
+            return GetTripRequest;
         })();
 
-        v1.GetTirpsRequest = (function() {
+        v1.GetTripsRequest = (function() {
 
             /**
-             * Properties of a GetTirpsRequest.
+             * Properties of a GetTripsRequest.
              * @memberof rental.v1
-             * @interface IGetTirpsRequest
-             * @property {rental.v1.TripStatus|null} [startus] GetTirpsRequest startus
+             * @interface IGetTripsRequest
+             * @property {rental.v1.TripStatus|null} [startus] GetTripsRequest startus
              */
 
             /**
-             * Constructs a new GetTirpsRequest.
+             * Constructs a new GetTripsRequest.
              * @memberof rental.v1
-             * @classdesc Represents a GetTirpsRequest.
-             * @implements IGetTirpsRequest
+             * @classdesc Represents a GetTripsRequest.
+             * @implements IGetTripsRequest
              * @constructor
-             * @param {rental.v1.IGetTirpsRequest=} [properties] Properties to set
+             * @param {rental.v1.IGetTripsRequest=} [properties] Properties to set
              */
-            function GetTirpsRequest(properties) {
+            function GetTripsRequest(properties) {
                 if (properties)
                     for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                         if (properties[keys[i]] != null)
@@ -765,25 +765,25 @@ export const rental = $root.rental = (() => {
             }
 
             /**
-             * GetTirpsRequest startus.
+             * GetTripsRequest startus.
              * @member {rental.v1.TripStatus} startus
-             * @memberof rental.v1.GetTirpsRequest
+             * @memberof rental.v1.GetTripsRequest
              * @instance
              */
-            GetTirpsRequest.prototype.startus = 0;
+            GetTripsRequest.prototype.startus = 0;
 
             /**
-             * Creates a GetTirpsRequest message from a plain object. Also converts values to their respective internal types.
+             * Creates a GetTripsRequest message from a plain object. Also converts values to their respective internal types.
              * @function fromObject
-             * @memberof rental.v1.GetTirpsRequest
+             * @memberof rental.v1.GetTripsRequest
              * @static
              * @param {Object.<string,*>} object Plain object
-             * @returns {rental.v1.GetTirpsRequest} GetTirpsRequest
+             * @returns {rental.v1.GetTripsRequest} GetTripsRequest
              */
-            GetTirpsRequest.fromObject = function fromObject(object) {
-                if (object instanceof $root.rental.v1.GetTirpsRequest)
+            GetTripsRequest.fromObject = function fromObject(object) {
+                if (object instanceof $root.rental.v1.GetTripsRequest)
                     return object;
-                let message = new $root.rental.v1.GetTirpsRequest();
+                let message = new $root.rental.v1.GetTripsRequest();
                 switch (object.startus) {
                 case "TS_NOT_SPECIFIED":
                 case 0:
@@ -802,15 +802,15 @@ export const rental = $root.rental = (() => {
             };
 
             /**
-             * Creates a plain object from a GetTirpsRequest message. Also converts values to other types if specified.
+             * Creates a plain object from a GetTripsRequest message. Also converts values to other types if specified.
              * @function toObject
-             * @memberof rental.v1.GetTirpsRequest
+             * @memberof rental.v1.GetTripsRequest
              * @static
-             * @param {rental.v1.GetTirpsRequest} message GetTirpsRequest
+             * @param {rental.v1.GetTripsRequest} message GetTripsRequest
              * @param {$protobuf.IConversionOptions} [options] Conversion options
              * @returns {Object.<string,*>} Plain object
              */
-            GetTirpsRequest.toObject = function toObject(message, options) {
+            GetTripsRequest.toObject = function toObject(message, options) {
                 if (!options)
                     options = {};
                 let object = {};
@@ -822,37 +822,37 @@ export const rental = $root.rental = (() => {
             };
 
             /**
-             * Converts this GetTirpsRequest to JSON.
+             * Converts this GetTripsRequest to JSON.
              * @function toJSON
-             * @memberof rental.v1.GetTirpsRequest
+             * @memberof rental.v1.GetTripsRequest
              * @instance
              * @returns {Object.<string,*>} JSON object
              */
-            GetTirpsRequest.prototype.toJSON = function toJSON() {
+            GetTripsRequest.prototype.toJSON = function toJSON() {
                 return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
             };
 
-            return GetTirpsRequest;
+            return GetTripsRequest;
         })();
 
-        v1.GetTirpsReponse = (function() {
+        v1.GetTripsReponse = (function() {
 
             /**
-             * Properties of a GetTirpsReponse.
+             * Properties of a GetTripsReponse.
              * @memberof rental.v1
-             * @interface IGetTirpsReponse
-             * @property {Array.<rental.v1.ITripEntity>|null} [trips] GetTirpsReponse trips
+             * @interface IGetTripsReponse
+             * @property {Array.<rental.v1.ITripEntity>|null} [trips] GetTripsReponse trips
              */
 
             /**
-             * Constructs a new GetTirpsReponse.
+             * Constructs a new GetTripsReponse.
              * @memberof rental.v1
-             * @classdesc Represents a GetTirpsReponse.
-             * @implements IGetTirpsReponse
+             * @classdesc Represents a GetTripsReponse.
+             * @implements IGetTripsReponse
              * @constructor
-             * @param {rental.v1.IGetTirpsReponse=} [properties] Properties to set
+             * @param {rental.v1.IGetTripsReponse=} [properties] Properties to set
              */
-            function GetTirpsReponse(properties) {
+            function GetTripsReponse(properties) {
                 this.trips = [];
                 if (properties)
                     for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
@@ -861,32 +861,32 @@ export const rental = $root.rental = (() => {
             }
 
             /**
-             * GetTirpsReponse trips.
+             * GetTripsReponse trips.
              * @member {Array.<rental.v1.ITripEntity>} trips
-             * @memberof rental.v1.GetTirpsReponse
+             * @memberof rental.v1.GetTripsReponse
              * @instance
              */
-            GetTirpsReponse.prototype.trips = $util.emptyArray;
+            GetTripsReponse.prototype.trips = $util.emptyArray;
 
             /**
-             * Creates a GetTirpsReponse message from a plain object. Also converts values to their respective internal types.
+             * Creates a GetTripsReponse message from a plain object. Also converts values to their respective internal types.
              * @function fromObject
-             * @memberof rental.v1.GetTirpsReponse
+             * @memberof rental.v1.GetTripsReponse
              * @static
              * @param {Object.<string,*>} object Plain object
-             * @returns {rental.v1.GetTirpsReponse} GetTirpsReponse
+             * @returns {rental.v1.GetTripsReponse} GetTripsReponse
              */
-            GetTirpsReponse.fromObject = function fromObject(object) {
-                if (object instanceof $root.rental.v1.GetTirpsReponse)
+            GetTripsReponse.fromObject = function fromObject(object) {
+                if (object instanceof $root.rental.v1.GetTripsReponse)
                     return object;
-                let message = new $root.rental.v1.GetTirpsReponse();
+                let message = new $root.rental.v1.GetTripsReponse();
                 if (object.trips) {
                     if (!Array.isArray(object.trips))
-                        throw TypeError(".rental.v1.GetTirpsReponse.trips: array expected");
+                        throw TypeError(".rental.v1.GetTripsReponse.trips: array expected");
                     message.trips = [];
                     for (let i = 0; i < object.trips.length; ++i) {
                         if (typeof object.trips[i] !== "object")
-                            throw TypeError(".rental.v1.GetTirpsReponse.trips: object expected");
+                            throw TypeError(".rental.v1.GetTripsReponse.trips: object expected");
                         message.trips[i] = $root.rental.v1.TripEntity.fromObject(object.trips[i]);
                     }
                 }
@@ -894,15 +894,15 @@ export const rental = $root.rental = (() => {
             };
 
             /**
-             * Creates a plain object from a GetTirpsReponse message. Also converts values to other types if specified.
+             * Creates a plain object from a GetTripsReponse message. Also converts values to other types if specified.
              * @function toObject
-             * @memberof rental.v1.GetTirpsReponse
+             * @memberof rental.v1.GetTripsReponse
              * @static
-             * @param {rental.v1.GetTirpsReponse} message GetTirpsReponse
+             * @param {rental.v1.GetTripsReponse} message GetTripsReponse
              * @param {$protobuf.IConversionOptions} [options] Conversion options
              * @returns {Object.<string,*>} Plain object
              */
-            GetTirpsReponse.toObject = function toObject(message, options) {
+            GetTripsReponse.toObject = function toObject(message, options) {
                 if (!options)
                     options = {};
                 let object = {};
@@ -917,17 +917,17 @@ export const rental = $root.rental = (() => {
             };
 
             /**
-             * Converts this GetTirpsReponse to JSON.
+             * Converts this GetTripsReponse to JSON.
              * @function toJSON
-             * @memberof rental.v1.GetTirpsReponse
+             * @memberof rental.v1.GetTripsReponse
              * @instance
              * @returns {Object.<string,*>} JSON object
              */
-            GetTirpsReponse.prototype.toJSON = function toJSON() {
+            GetTripsReponse.prototype.toJSON = function toJSON() {
                 return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
             };
 
-            return GetTirpsReponse;
+            return GetTripsReponse;
         })();
 
         v1.UpdateTripRequest = (function() {
@@ -1097,34 +1097,34 @@ export const rental = $root.rental = (() => {
              */
 
             /**
-             * Callback as used by {@link rental.v1.TripService#getTirp}.
+             * Callback as used by {@link rental.v1.TripService#getTrip}.
              * @memberof rental.v1.TripService
-             * @typedef GetTirpCallback
+             * @typedef GetTripCallback
              * @type {function}
              * @param {Error|null} error Error, if any
              * @param {rental.v1.Trip} [response] Trip
              */
 
             /**
-             * Calls GetTirp.
-             * @function getTirp
+             * Calls GetTrip.
+             * @function getTrip
              * @memberof rental.v1.TripService
              * @instance
-             * @param {rental.v1.IGetTirpRequest} request GetTirpRequest message or plain object
-             * @param {rental.v1.TripService.GetTirpCallback} callback Node-style callback called with the error, if any, and Trip
+             * @param {rental.v1.IGetTripRequest} request GetTripRequest message or plain object
+             * @param {rental.v1.TripService.GetTripCallback} callback Node-style callback called with the error, if any, and Trip
              * @returns {undefined}
              * @variation 1
              */
-            Object.defineProperty(TripService.prototype.getTirp = function getTirp(request, callback) {
-                return this.rpcCall(getTirp, $root.rental.v1.GetTirpRequest, $root.rental.v1.Trip, request, callback);
-            }, "name", { value: "GetTirp" });
+            Object.defineProperty(TripService.prototype.getTrip = function getTrip(request, callback) {
+                return this.rpcCall(getTrip, $root.rental.v1.GetTripRequest, $root.rental.v1.Trip, request, callback);
+            }, "name", { value: "GetTrip" });
 
             /**
-             * Calls GetTirp.
-             * @function getTirp
+             * Calls GetTrip.
+             * @function getTrip
              * @memberof rental.v1.TripService
              * @instance
-             * @param {rental.v1.IGetTirpRequest} request GetTirpRequest message or plain object
+             * @param {rental.v1.IGetTripRequest} request GetTripRequest message or plain object
              * @returns {Promise<rental.v1.Trip>} Promise
              * @variation 2
              */
@@ -1135,7 +1135,7 @@ export const rental = $root.rental = (() => {
              * @typedef GetTripsCallback
              * @type {function}
              * @param {Error|null} error Error, if any
-             * @param {rental.v1.GetTirpsReponse} [response] GetTirpsReponse
+             * @param {rental.v1.GetTripsReponse} [response] GetTripsReponse
              */
 
             /**
@@ -1143,13 +1143,13 @@ export const rental = $root.rental = (() => {
              * @function getTrips
              * @memberof rental.v1.TripService
              * @instance
-             * @param {rental.v1.IGetTirpsRequest} request GetTirpsRequest message or plain object
-             * @param {rental.v1.TripService.GetTripsCallback} callback Node-style callback called with the error, if any, and GetTirpsReponse
+             * @param {rental.v1.IGetTripsRequest} request GetTripsRequest message or plain object
+             * @param {rental.v1.TripService.GetTripsCallback} callback Node-style callback called with the error, if any, and GetTripsReponse
              * @returns {undefined}
              * @variation 1
              */
             Object.defineProperty(TripService.prototype.getTrips = function getTrips(request, callback) {
-                return this.rpcCall(getTrips, $root.rental.v1.GetTirpsRequest, $root.rental.v1.GetTirpsReponse, request, callback);
+                return this.rpcCall(getTrips, $root.rental.v1.GetTripsRequest, $root.rental.v1.GetTripsReponse, request, callback);
             }, "name", { value: "GetTrips" });
 
             /**
@@ -1157,8 +1157,8 @@ export const rental = $root.rental = (() => {
              * @function getTrips
              * @memberof rental.v1.TripService
              * @instance
-             * @param {rental.v1.IGetTirpsRequest} request GetTirpsRequest message or plain object
-             * @returns {Promise<rental.v1.GetTirpsReponse>} Promise
+             * @param {rental.v1.IGetTripsRequest} request GetTripsRequest message or plain object
+             * @returns {Promise<rental.v1.GetTripsReponse>} Promise
              * @variation 2
              */
 

@@ -41,16 +41,16 @@ message CreateTripRequest {
     string car_id = 2;
 }
 
-message GetTirpRequest {
+message GetTripRequest {
     string id = 1;
 }
 
 
-message GetTirpsRequest {
+message GetTripsRequest {
     TripStatus startus = 1;
 }
 
-message GetTirpsReponse {
+message GetTripsReponse {
     repeated TripEntity trips = 1;
 }
 
@@ -62,7 +62,7 @@ message UpdateTripRequest {
 
 service TripService {
     rpc CreateTrip (CreateTripRequest) returns (TripEntity);
-    rpc GetTirp (GetTirpRequest) returns (Trip);
-    rpc GetTrips (GetTirpsRequest) returns (GetTirpsReponse);
+    rpc GetTrip (GetTripRequest) returns (Trip);
+    rpc GetTrips (GetTripsRequest) returns (GetTripsReponse);
     rpc UpdateTrip (UpdateTripRequest) returns (Trip);
 }

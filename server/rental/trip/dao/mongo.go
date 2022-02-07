@@ -50,8 +50,8 @@ func (m *Mongo) CreateTrip(c context.Context, trip *rentalpb.Trip) (*TripRecord,
 	return r, nil
 }
 
-// GetTirp in
-func (m *Mongo) GetTirp(c context.Context, id id.TripID, accountID id.AccountID) (*TripRecord, error) {
+// GetTrip in
+func (m *Mongo) GetTrip(c context.Context, id id.TripID, accountID id.AccountID) (*TripRecord, error) {
 	objID, err := objid.FromID(id)
 	if err != nil {
 		return nil, fmt.Errorf("invalid id:%v", err)
@@ -75,7 +75,7 @@ func (m *Mongo) GetTirp(c context.Context, id id.TripID, accountID id.AccountID)
 
 }
 
-func (m *Mongo) GetTirps(c context.Context, accountID id.AccountID, status rentalpb.TripStatus) ([]*TripRecord, error) {
+func (m *Mongo) GetTrips(c context.Context, accountID id.AccountID, status rentalpb.TripStatus) ([]*TripRecord, error) {
 	filter := bson.M{
 		accountIDField: accountID.String(),
 	}

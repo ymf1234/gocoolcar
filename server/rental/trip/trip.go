@@ -89,12 +89,42 @@ func (s *Service) CreateTrip(ctx context.Context, req *rentalpb.CreateTripReques
 	}, nil
 }
 
-func (s *Service) GetTirp(ctx context.Context, req *rentalpb.GetTirpRequest) (*rentalpb.Trip, error) {
-	return nil, status.Error(codes.Unimplemented, "")
+func (s *Service) GetTrip(ctx context.Context, req *rentalpb.GetTripRequest) (*rentalpb.Trip, error) {
+	aid, err := auth.AccountIDFromContext(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Unauthenticated, "")
+	}
+
+	tr, err := s.Mongo.GetTrip(ctx, id.TripID(req.Id), aid)
+	if err != nil {
+		return nil, status.Error(codes.NotFound, "")
+	}
+	return tr.Trip, nil
 }
 
-func (s *Service) GetTirps(ctx context.Context, req *rentalpb.GetTirpsRequest) (*rentalpb.GetTirpsReponse, error) {
-	return nil, status.Error(codes.Unimplemented, "")
+func (s *Service) GetTrips(ctx context.Context, req *rentalpb.GetTripsRequest) (*rentalpb.GetTripsReponse, error) {
+	aid, err := auth.AccountIDFromContext(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Unauthenticated, "")
+	}
+
+	trips, err := s.Mongo.GetTrips(ctx, aid, req.Startus)
+
+	if err != nil {
+		s.Logger.Error("cannot get trips", zap.Error(err))
+		return nil, status.Error(codes.Internal, "")
+	}
+
+	res := &rentalpb.GetTripsReponse{}
+
+	for _, tr := range trips {
+		res.Trips = append(res.Trips, &rentalpb.TripEntity{
+			Id:   tr.ID.Hex(),
+			Trip: tr.Trip,
+		})
+	}
+
+	return res, nil
 }
 
 func (s *Service) UpdateTrip(ctx context.Context, req *rentalpb.UpdateTripRequest) (*rentalpb.Trip, error) {
@@ -103,7 +133,11 @@ func (s *Service) UpdateTrip(ctx context.Context, req *rentalpb.UpdateTripReques
 		return nil, status.Error(codes.Unauthenticated, "")
 	}
 	tid := id.TripID(req.Id)
-	tr, err := s.Mongo.GetTirp(ctx, tid, aid)
+	tr, err := s.Mongo.GetTrip(ctx, tid, aid)
+
+	if err != nil {
+		return nil, err
+	}
 	if req.Current != nil {
 		tr.Trip.Current = s.calcCurrentStatus(tr.Trip, req.Current)
 	}
