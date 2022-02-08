@@ -6,6 +6,7 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.7.2
 	github.com/medivhzhan/weapp/v2 v2.4.2
+	github.com/xuri/excelize/v2 v2.5.0 // indirect
 	go.mongodb.org/mongo-driver v1.8.1
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.7.0 // indirect

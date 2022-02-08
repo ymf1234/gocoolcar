@@ -13,9 +13,10 @@
     <cover-image src="/resources/my_location.png" bindtap="onMyLocationTap"></cover-image>
   </view >
 
-  <view class="btn-container bg-grey round" bindtap="onScanTap">
-      <view>扫码租车</view>
-  </view>
+  
 </map>
+<view class="btn-container bg-grey round" bindtap="onScanTap">
+      <view>扫码租车</view>
+</view>
 <modal id="licModal" showCancel="{{showCancel}}" showModal="{{showModal}}" title="身份证" contents="需要身份证认证才能租车" bindok="onModalOK">
 </modal>

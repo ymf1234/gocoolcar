@@ -2,6 +2,7 @@ package trip
 
 import (
 	"context"
+	"math/rand"
 	"time"
 
 	rentalpb "coolcar/rental/api/gen/v1"
@@ -58,15 +59,11 @@ func (s *Service) CreateTrip(ctx context.Context, req *rentalpb.CreateTripReques
 		return nil, status.Error(codes.FailedPrecondition, err.Error())
 	}
 
-	poi, err := s.POIManager.Resolve(ctx, req.Start)
-	if err != nil {
-		s.Logger.Info("cannot resolve poi", zap.Stringer("location ", req.Start), zap.Error(err))
-	}
-	// 创建行程: 写入数据库，开始计费
-	ls := &rentalpb.LocationStatus{
-		Location: req.Start,
-		PoiName:  poi,
-	}
+	ls := s.calcCurrentStatus(ctx, &rentalpb.LocationStatus{
+		Location:     req.Start,
+		TimestampSec: nowFunc(),
+	}, req.Start)
+
 	tr, err := s.Mongo.CreateTrip(ctx, &rentalpb.Trip{
 		AccountId:  aid.String(),
 		CarId:      carID.String(),
@@ -154,7 +151,7 @@ func (s *Service) UpdateTrip(ctx context.Context, req *rentalpb.UpdateTripReques
 		cur = req.Current
 	}
 
-	tr.Trip.Current = s.calcCurrentStatus(tr.Trip.Current, cur)
+	tr.Trip.Current = s.calcCurrentStatus(ctx, tr.Trip.Current, cur)
 
 	if req.EndTrip {
 		tr.Trip.End = tr.Trip.Current
@@ -164,12 +161,27 @@ func (s *Service) UpdateTrip(ctx context.Context, req *rentalpb.UpdateTripReques
 	return nil, status.Error(codes.Unimplemented, "")
 }
 
-const centsPerSec = 0.7
+var nowFunc = func() int64 {
+	return time.Now().Unix()
+}
 
-func (s *Service) calcCurrentStatus(last *rentalpb.LocationStatus, cur *rentalpb.Location) *rentalpb.LocationStatus {
-	elapsedSec := float64(time.Now().Unix() - last.TimestampSec)
+const (
+	centsPerSec = 0.7
+	kmPerSec    = 0.02
+)
+
+func (s *Service) calcCurrentStatus(ctx context.Context, last *rentalpb.LocationStatus, cur *rentalpb.Location) *rentalpb.LocationStatus {
+	now := nowFunc()
+	elapsedSec := float64(nowFunc() - last.TimestampSec)
+	poi, err := s.POIManager.Resolve(ctx, cur)
+	if err != nil {
+		s.Logger.Info("cannnot resolve poi", zap.Stringer("location ", cur), zap.Error(err))
+	}
 	return &rentalpb.LocationStatus{
-		Location: cur,
-		FeeCent:  last.FeeCent + int32(centsPerSec*elapsedSec),
+		Location:     cur,
+		FeeCent:      last.FeeCent + int32(centsPerSec*elapsedSec*2*rand.Float64()),
+		KmDriven:     last.KmDriven + kmPerSec*elapsedSec*2*rand.Float64(),
+		TimestampSec: now,
+		PoiName:      poi,
 	}
 }

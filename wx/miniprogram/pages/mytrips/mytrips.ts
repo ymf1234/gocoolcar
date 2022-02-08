@@ -1,5 +1,7 @@
 // pages/mytrips/mytrips.ts
 
+import { IAppOption } from "../../appoption"
+
 interface Trip {
     shortId: string
     start: string
