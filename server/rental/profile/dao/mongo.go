@@ -23,8 +23,9 @@ func NewMongo(db *mongo.Database) *Mongo {
 }
 
 const (
-	accountIDField = "account_id"
-	profileField   = "profile"
+	accountIDField      = "account_id"
+	profileField        = "profile"
+	identityStatusField = profileField + ".identitystatus"
 )
 
 type ProfileRecord struct {
@@ -47,9 +48,13 @@ func (m *Mongo) GetProfile(c context.Context, aid id.AccountID) (*rentalpb.Profi
 	return pr.Profile, nil
 }
 
-func (m *Mongo) UpdateProfile(c context.Context, aid id.AccountID, p *rentalpb.Profile) error {
-	_, err := m.col.UpdateOne(c, byAccountID(aid), mgutil.Set(bson.M{
-		profileField: p,
+func (m *Mongo) UpdateProfile(c context.Context, aid id.AccountID, prevState rentalpb.IdentityStatus, p *rentalpb.Profile) error {
+	_, err := m.col.UpdateOne(c, bson.M{
+		accountIDField:      aid.String(),
+		identityStatusField: prevState,
+	}, mgutil.Set(bson.M{
+		accountIDField: aid.String(),
+		profileField:   p,
 	}), options.Update().SetUpsert(true))
 
 	return err

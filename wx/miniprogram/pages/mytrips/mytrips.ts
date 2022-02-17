@@ -1,6 +1,7 @@
 // pages/mytrips/mytrips.ts
 
 import { IAppOption } from "../../appoption"
+import { routing } from "../../utils/routing"
 
 interface Trip {
     shortId: string
@@ -207,6 +208,12 @@ Page({
     },
 
     onSwiperChange(e: any) {
+    },
+
+    onRegisterTap() {
+        wx.navigateTo({
+            url: routing.register(),
+        })
     },
 
     onPromotionItemTap(e: any) {

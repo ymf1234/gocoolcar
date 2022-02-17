@@ -1,5 +1,16 @@
+import { ProfileService } from "../../service/profile"
+import { rental } from "../../service/proto_gen/rental/rental_pb"
+import { padString } from "../../utils/format"
 import { routing } from "../../utils/routing"
 
+function formatTime(millis: number) {
+  const dt = new Date(millis)
+  const y = dt.getFullYear()
+  const m = dt.getMonth() + 1
+  const d = dt.getDate()
+
+  return `${padString(y)}-${padString(m)}-${padString(d)}`
+}
 // pages/register/register.ts
 Page({
   redirectURL: '',
@@ -13,7 +24,17 @@ Page({
     birthDate: '1990-01-01',
     licNo: '',
     name: '',
-    state: 'UNSUBMITTED' as 'UNSUBMITTED' | 'PENDING' | 'VERIFIED'
+    state: rental.v1.IdentityStatus[rental.v1.IdentityStatus.UNSUBMITTED]
+  },
+
+  renderProfile(p: rental.v1.IProfile) {
+    this.setData({
+      licNo: p.identity?.licNumber || '',
+      name: p.identity?.name || '',
+      gendersIndex: p.identity?.gender || 0,
+      birthDate: formatTime(p.identity?.birthDateMillis || 0),
+      state: rental.v1.IdentityStatus[p.identityStatus || 0], 
+    })
   },
 
   /**
@@ -113,20 +134,17 @@ Page({
 
   // 表单提交
   onSubmit() {
-    this.setData({
-      state: 'PENDING'
-    })
-    setTimeout(() => {
-      this.onLicVerified()
-    }, 3000);
+    ProfileService.submitProfile({
+      licNumber: this.data.licNo,
+      name: this.data.name,
+      gender: this.data.gendersIndex,
+      birthDateMillis: Date.parse(this.data.birthDate)
+    }).then(p => this.renderProfile(p))
   },
 
   // 重新审核
   onResubmit() {
-    this.setData({
-      state: 'UNSUBMITTED',
-      licImgURL: ''
-    })
+    ProfileService.clearProfile().then(p => this.renderProfile(p))
   },
 
   onLicVerified() {
