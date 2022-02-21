@@ -48,6 +48,12 @@ func main() {
 	}
 
 	db := mongoClient.Database("coolcar")
+
+	profService := &profile.Service{
+		Mongo:                             profiledao.NewMongo(db),
+		Logger:                            loger,
+		UnimplementedProfileServiceServer: rentalpb.UnimplementedProfileServiceServer{},
+	}
 	loger.Sugar().Fatal(server.RunGRPCServer(&server.GRPCConfig{
 		Name:              "rental",
 		Addr:              ":8082",
@@ -55,18 +61,16 @@ func main() {
 		Logger:            loger,
 		RegisterFunc: func(s *grpc.Server) {
 			rentalpb.RegisterTripServiceServer(s, &trip.Service{
-				CarManager:                     &car.Manager{},
-				ProfileManager:                 &profClient.Manager{},
+				CarManager: &car.Manager{},
+				ProfileManager: &profClient.Manager{
+					Fetcher: profService,
+				},
 				POIManager:                     &poi.Manager{},
 				Mongo:                          tripdao.NewMongo(db),
 				Logger:                         loger,
 				UnimplementedTripServiceServer: rentalpb.UnimplementedTripServiceServer{},
 			})
-			rentalpb.RegisterProfileServiceServer(s, &profile.Service{
-				Mongo:                             profiledao.NewMongo(db),
-				Logger:                            loger,
-				UnimplementedProfileServiceServer: rentalpb.UnimplementedProfileServiceServer{},
-			})
+			rentalpb.RegisterProfileServiceServer(s, profService)
 		},
 	}))
 }

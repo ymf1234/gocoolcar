@@ -9,7 +9,7 @@
   markers="{{markers}}"
 >
   <view class="icon-container">
-    <cover-image  class="round" src="{{avatarURL ? avatar : '/resources/account.png'}}" bindtap="onMyTripsTap"></cover-image>
+    <cover-image  class="round" src="{{avatarURL ? avatarURL : '/resources/account.png'}}" bindtap="onMyTripsTap"></cover-image>
     <cover-image src="/resources/my_location.png" bindtap="onMyLocationTap"></cover-image>
   </view >
 
