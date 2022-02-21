@@ -1,9 +1,12 @@
-// pages/mytrips/mytrips.ts
-
 import { IAppOption } from "../../appoption"
+import { ProfileService } from "../../service/profile"
+import { rental } from "../../service/proto_gen/rental/rental_pb"
+import { TripService } from "../../service/trip"
+import { formatDuration, formatFee } from "../../utils/format"
 import { routing } from "../../utils/routing"
 
 interface Trip {
+    id: string
     shortId: string
     start: string
     end: string
@@ -11,6 +14,7 @@ interface Trip {
     fee: string
     distance: string
     status: string
+    inProgress: boolean
 }
 
 interface MainItem {
@@ -35,26 +39,25 @@ interface MainItemQueryResult {
     }
 }
 
-Page({
+const tripStatusMap = new Map([
+    [rental.v1.TripStatus.IN_PROGRESS, '进行中'],
+    [rental.v1.TripStatus.FINISHED, '已完成'],
+])
 
+const licStatusMap = new Map([
+    [rental.v1.IdentityStatus.UNSUBMITTED, '未认证'],
+    [rental.v1.IdentityStatus.PENDING, '未认证'],
+    [rental.v1.IdentityStatus.VERIFIED, '已认证'],
+])
+
+Page({
     scrollStates: {
         mainItems: [] as MainItemQueryResult[],
     },
 
-    /**
-     * 页面的初始数据
-     */
+    layoutResolver: undefined as ((value?: unknown) => void)|undefined,
+
     data: {
-        indicatorDots: true,
-        autoPlay:true,
-        interval:3000,
-        duration:500,
-        circular: true,
-        multiItemCount: 1,
-        preVMargin: '',
-        nextMargin: '',
-        vertical: false,
-        current: 0,
         promotionItems: [
             {
                 img: 'https://img.mukewang.com/5f7301d80001fdee18720764.jpg',
@@ -73,141 +76,144 @@ Page({
                 promotionID: 4,
             },
         ],
+        licStatus: licStatusMap.get(rental.v1.IdentityStatus.UNSUBMITTED),
         avatarURL: '',
         tripsHeight: 0,
-        mainItems: [] as MainItem[],
-        navItems: [] as NavItem[],
-        mainScroll: '',
         navCount: 0,
+        mainItems: [] as MainItem[],
+        mainScroll: '',
+        navItems: [] as NavItem[],
         navSel: '',
         navScroll: '',
     },
 
-    /**
-     * 生命周期函数--监听页面加载
-     */
-    async onLoad() {
-        this.populateTrips()
-        const userInfo = await getApp<IAppOption>().globalData.userInfo
-        this.setData({
-            avatarURL: userInfo?.avatarUrl
+    onLoad() {
+        const layoutReady = new Promise((resolve) => {
+            this.layoutResolver = resolve
+        })
+        Promise.all([TripService.getTrips(), layoutReady]).then(([trips]) => {
+            this.populateTrips(trips.trips!)
+        })
+        getApp<IAppOption>().globalData.userInfo.then(userInfo => {
+            this.setData({
+                avatarURL: userInfo.avatarUrl,
+            })
         })
     },
 
-    populateTrips() {
+    onShow() {
+        ProfileService.getProfile().then(p => {
+            this.setData({
+                licStatus: licStatusMap.get(p.identityStatus||0),
+            })
+        })
+    },
+
+    onReady() {
+        wx.createSelectorQuery().select('#heading')
+            .boundingClientRect(rect => {
+                const height = wx.getSystemInfoSync().windowHeight - rect.height
+                this.setData({
+                    tripsHeight: height,
+                    navCount: Math.round(height/50),
+                }, () => {
+                    if (this.layoutResolver) {
+                        this.layoutResolver()
+                    }
+                })
+            }).exec()
+    },
+
+    populateTrips(trips: rental.v1.ITripEntity[]) {
         const mainItems: MainItem[] = []
         const navItems: NavItem[] = []
         let navSel = ''
-        let preNav = ''
-        for(let i =0; i<100;i++) {
+        let prevNav = ''
+        for (let i = 0; i < trips.length; i++) {
+            const trip = trips[i]
             const mainId = 'main-' + i
             const navId = 'nav-' + i
-            const tripId = (10001 + i).toString()
-            if(!preNav) {
-                preNav = navId
+            const shortId = trip.id?.substr(trip.id.length-6)
+            if (!prevNav) {
+                prevNav = navId
+            }
+            const tripData: Trip = {
+                id: trip.id!,
+                shortId: '****'+shortId,
+                start: trip.trip?.start?.poiName||'未知',
+                end: '',
+                distance: '',
+                duration: '',
+                fee: '',
+                status: tripStatusMap.get(trip.trip?.status!)||'未知',
+                inProgress: trip.trip?.status ===  rental.v1.TripStatus.IN_PROGRESS,
+            }
+            const end = trip.trip?.end
+            if (end) {
+                tripData.end = end.poiName||'未知',
+                tripData.distance = end.kmDriven?.toFixed(1)+'公里',
+                tripData.fee = formatFee(end.feeCent||0)
+                const dur = formatDuration((end.timestampSec||0) - (trip.trip?.start?.timestampSec||0))
+                tripData.duration = `${dur.hh}时${dur.mm}分`
             }
             mainItems.push({
                 id: mainId,
                 navId: navId,
-                navScrollId: preNav,
-                data: {
-                    shortId: tripId,
-                    start: '上海',
-                    end: '河南',
-                    distance: '776公里',
-                    duration: '9时50分',
-                    fee: '800元',
-                    status: '已完成',
-                } 
-            }),
-
+                navScrollId: prevNav,
+                data: tripData,
+            })
             navItems.push({
                 id: navId,
                 mainId: mainId,
-                label: tripId,
+                label: shortId||'',
             })
-            if (i===0) {
+            if (i === 0) {
                 navSel = navId
             }
-            preNav = navId
+            prevNav = navId
+        }
+        for (let i = 0; i < this.data.navCount-1; i++) {
+            navItems.push({
+                id: '',
+                mainId: '',
+                label: '',
+            })
         }
         this.setData({
-            mainItems: mainItems,
-            navItems: navItems,
-            navSel: navSel,
+            mainItems,
+            navItems,
+            navSel,
         }, () => {
             this.prepareScrollStates()
         })
     },
 
     prepareScrollStates() {
-        wx.createSelectorQuery().selectAll(".main-item")
-        .fields({
-            id: true,
-            dataset: true,
-            rect: true
-        }).exec(res => {
-            this.scrollStates.mainItems = res[0]
-        })
-    },
-
-    /**
-     * 生命周期函数--监听页面初次渲染完成
-     */
-    onReady() {
-        wx.createSelectorQuery().select("#heading")
-        .boundingClientRect(rect => {
-            const height = wx.getSystemInfoSync().windowHeight - rect.height
-            this.setData({
-                tripsHeight : height,
-                navCount: height / 50
+        wx.createSelectorQuery().selectAll('.main-item')
+            .fields({
+                id: true,
+                dataset: true,
+                rect: true,
+            }).exec(res => {
+                this.scrollStates.mainItems = res[0]
             })
-        }).exec()
     },
 
-    /**
-     * 生命周期函数--监听页面显示
-     */
-    onShow() {
-
+    onPromotionItemTap(e: any) {
+        const promotionID:number = e.currentTarget.dataset.promotionId
+        if (promotionID) {
+            console.log('claiming promotion', promotionID)
+        }
     },
 
-    /**
-     * 生命周期函数--监听页面隐藏
-     */
-    onHide() {
-
-    },
-
-    /**
-     * 生命周期函数--监听页面卸载
-     */
-    onUnload() {
-
-    },
-
-    /**
-     * 页面相关事件处理函数--监听用户下拉动作
-     */
-    onPullDownRefresh() {
-
-    },
-
-    /**
-     * 页面上拉触底事件的处理函数
-     */
-    onReachBottom() {
-
-    },
-
-    /**
-     * 用户点击右上角分享
-     */
-    onShareAppMessage() {
-
-    },
-
-    onSwiperChange(e: any) {
+    onGetUserInfo(e: any) {
+        const userInfo: WechatMiniprogram.UserInfo = e.detail.userInfo
+        if (userInfo) {
+            getApp<IAppOption>().resolveUserInfo(userInfo)
+            this.setData({
+                avatarURL: userInfo.avatarUrl,
+            })
+        }
     },
 
     onRegisterTap() {
@@ -216,21 +222,13 @@ Page({
         })
     },
 
-    onPromotionItemTap(e: any) {
-        console.log(e)
-        const promotionId = e.currentTarget.dataset.promotionId
-        if (promotionId) {
-
-        }
-    },
-
     onNavItemTap(e: any) {
         const mainId: string = e.currentTarget?.dataset?.mainId
         const navId: string = e.currentTarget?.id
-        if (mainId) {
+        if (mainId && navId) {
             this.setData({
-                mainScroll : mainId,
-                navSel: navId
+                mainScroll: mainId,
+                navSel: navId,
             })
         }
     },
@@ -241,18 +239,29 @@ Page({
             return
         }
 
-        const selitem = this.scrollStates.mainItems.find(
-            v => v.top >= top
-        )
-
-        if(!selitem) {
+        const selItem = this.scrollStates.mainItems.find(
+            v => v.top >= top)
+        if (!selItem) {
             return
         }
 
         this.setData({
-            navSel: selitem.dataset.navId,
-            navScroll: selitem.dataset.navScrollId
+            navSel: selItem.dataset.navId,
+            navScroll: selItem.dataset.navScrollId,
         })
-
     },
+
+    onMianItemTap(e: any) {
+        if (!e.currentTarget.dataset.tripInProgress) {
+            return
+        }
+        const tripId = e.currentTarget.dataset.tripId
+        if (tripId) {
+            wx.redirectTo({
+                url: routing.drving({
+                    trip_id: tripId,
+                }),
+            })
+        }
+    }
 })

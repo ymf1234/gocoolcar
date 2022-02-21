@@ -52,9 +52,14 @@ func main() {
 			registerFunc: authpb.RegisterAuthServiceHandlerFromEndpoint,
 		},
 		{
-			name:         "rental",
+			name:         "trip",
 			addr:         "localhost:8082",
 			registerFunc: rentalpb.RegisterTripServiceHandlerFromEndpoint,
+		},
+		{
+			name:         "profile",
+			addr:         "localhost:8082",
+			registerFunc: rentalpb.RegisterProfileServiceHandlerFromEndpoint,
 		},
 	}
 

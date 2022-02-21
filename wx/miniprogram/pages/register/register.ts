@@ -14,6 +14,7 @@ function formatTime(millis: number) {
 // pages/register/register.ts
 Page({
   redirectURL: '',
+  profileRefresher: 0,
   /**
    * 页面的初始数据
    */
@@ -73,7 +74,7 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload() {
-
+    this.clearProfileRefresher()
   },
 
   /**
@@ -121,7 +122,7 @@ Page({
   // 性别事件
   onGenderChange(e: any) {
     this.setData({
-      gendersIndex: e.detail.value,
+      gendersIndex: parseInt(e.detail.value),
     })
   },
 
@@ -139,7 +140,33 @@ Page({
       name: this.data.name,
       gender: this.data.gendersIndex,
       birthDateMillis: Date.parse(this.data.birthDate)
-    }).then(p => this.renderProfile(p))
+    }).then(p => {
+      this.renderProfile(p)
+      this.scheduleProfileRefresher()
+    })
+  },
+
+  scheduleProfileRefresher() {
+    this.profileRefresher = setInterval(() => {
+      ProfileService.getProfile().then(p => {
+        this.renderProfile(p)
+        if (p.identityStatus !== rental.v1.IdentityStatus.PENDING) {
+          this.clearProfileRefresher()
+        }
+
+        if (p.identityStatus === rental.v1.IdentityStatus.VERIFIED) {
+          this.onLicVerified()
+        }
+      })
+    }, 1000)
+  },
+
+
+  clearProfileRefresher() {
+    if (this.profileRefresher) {
+      clearInterval(this.profileRefresher)
+      this.profileRefresher = 0
+    }
   },
 
   // 重新审核
@@ -148,10 +175,6 @@ Page({
   },
 
   onLicVerified() {
-    this.setData({
-      state: 'VERIFIED',
-    })
-
     if(this.redirectURL) {
       wx.redirectTo({
         url: this.redirectURL
