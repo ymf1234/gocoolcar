@@ -105,15 +105,14 @@ Page({
           this.setData({
             licImgURL: res.tempFilePaths[0]
           })
-          // TODO: upload image
-          setTimeout(() => {
-            this.setData({
-              licNo: '12312312312',
-              name : 'aaa',
-              gendersIndex: 1,
-              birthDate: '2000-12-12'
-            })
-          }, 1000)
+          const data = wx.getFileSystemManager().readFileSync(res.tempFilePaths[0])
+          wx.request({
+            method: 'PUT',
+            url: 'https://coolcar-1253590403.cos.ap-shanghai.myqcloud.com',
+            data,
+            success: console.log,
+            fail: console.error,
+          })
         }
       }
     })
