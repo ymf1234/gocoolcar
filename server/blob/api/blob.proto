@@ -18,7 +18,7 @@ message GetBlobRequest {
 }
 
 message GetBlobResponse {
-    string data = 1;
+    bytes data = 1;
 }
 
 message GetBlobURLRequest {
