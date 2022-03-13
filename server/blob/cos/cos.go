@@ -17,10 +17,6 @@ type Service struct {
 	secKey string
 }
 
-// "https://coolcar-1253590403.cos.ap-shanghai.myqcloud.com"
-
-// "AKIDykGVUDfqkNjocCVXIl4B4h4B1atvgANK"
-// "i9JDrEMHwMWQ5UdWAXeV7TaR2LRHrCH6"
 func NewService(addr, secID, secKey string) (*Service, error) {
 	u, err := url.Parse(addr)
 	if err != nil {
@@ -43,7 +39,7 @@ func NewService(addr, secID, secKey string) (*Service, error) {
 }
 
 func (s *Service) SignURL(c context.Context, method, path string, timeoutSec time.Duration) (string, error) {
-
+	s.client.Object.GetPresignedURL()
 }
 
 func (s *Service) Get(c context.Context, path string) (io.ReadCloser, error) {
